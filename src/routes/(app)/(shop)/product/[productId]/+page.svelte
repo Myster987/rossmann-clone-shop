@@ -1,0 +1,51 @@
+<script lang="ts">
+	import { createAsyncStore } from '@/stores/async_stores';
+	import { ProductsList } from '@/components/custom/product_card';
+	import { Gallery } from '@/components/custom/gallery';
+	import { Currency } from '@/components/custom/other';
+	import { Separator } from '@/components/ui/separator';
+	import { Button } from '@/components/ui/button';
+	import type { PageData } from './$types';
+	import { Heart, ShoppingCart } from 'lucide-svelte';
+	import { AddToCart } from '@/components/custom/buttons';
+
+	export let data: PageData;
+	$: ({ product } = data);
+	const relatedProductsStore = createAsyncStore(data.streamed.relatedProducts);
+	$: relatedProductsStore.updateAsync(data.streamed.relatedProducts);
+</script>
+
+<main class="px-4 py-10 sm:px-6 sm:py-8">
+	<div class="grid gap-5">
+		<div class="grid grid-cols-1 items-start justify-center gap-x-8 gap-y-4 sm:grid-cols-2">
+			<Gallery images={product.images} />
+			<div>
+				<h1 class="text-4xl font-bold">{product.name}</h1>
+				<Currency amount={product.price} class="mt-3 text-2xl font-medium" />
+				<div>
+					<p>Kategoria: <b>{product.category}</b></p>
+					<p class="break-all">Opis: {product.description}</p>
+					<p class="break-all">Skład: {product.ingredients}</p>
+				</div>
+				<div class="mt-2 flex flex-wrap gap-2">
+					<AddToCart productId={product.id}>
+						<Button type="submit" class="flex gap-1 rounded-full text-lg"
+							>Dodaj do koszyka <ShoppingCart size="22" /></Button
+						>
+					</AddToCart>
+					<Button class="group flex gap-1 rounded-full text-lg"
+						>Dodaj do ulubionych <Heart
+							size="22"
+							class="group-hover:fill-primary-foreground"
+						/></Button
+					>
+				</div>
+			</div>
+		</div>
+		<Separator />
+		<h2 class="text-3xl font-semibold">Podobne produkty</h2>
+		<div class="grid grid-cols-1 gap-5 py-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+			<ProductsList products={relatedProductsStore} placholderCount={5} />
+		</div>
+	</div>
+</main>
