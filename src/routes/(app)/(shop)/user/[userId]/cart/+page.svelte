@@ -12,7 +12,7 @@
 	$: products = $cartStore.data?.map((val) => val.product);
 </script>
 
-<main class="flex h-[calc(100%-56px)] min-h-0 flex-col items-stretch gap-4 p-4">
+<main class="flex flex-col items-stretch gap-4 p-4">
 	<h1 class="text-4xl font-bold">Koszyk</h1>
 
 	<Separator />
@@ -25,13 +25,17 @@
 			isError={$cartStore.isError}
 		/>
 	</div>
+</main>
 
-	<div class="mt-auto flex gap-2 self-center p-2 py-4 text-3xl font-semibold">
+<div
+	class="sticky bottom-0 left-0 z-50 grid w-full border-t border-border/70 bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+>
+	<div class="flex justify-center gap-2 text-3xl font-semibold">
 		Razem:
 		{#if $cartStore.isLoading || typeof products == 'undefined'}
-			<p>asd</p>
+			<p>Ładuję...</p>
 		{:else}
 			<Currency amount={products.map((val) => val.price).reduce((a, b) => a + b, 0)} />
 		{/if}
 	</div>
-</main>
+</div>
