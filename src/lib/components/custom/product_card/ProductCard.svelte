@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Heart, ShoppingCart } from 'lucide-svelte';
 	import { Currency } from '../other';
-	import { AddToCart } from '../buttons';
+	import { AddToCart, AddToFavorite } from '../buttons';
 	import { Button } from '@/components/ui/button';
 	import * as Card from '@/components/ui/card';
 	import type { SelectImages, SelectProduct } from '@/db/schema';
@@ -18,9 +18,11 @@
 			></AddToCart
 		>
 
-		<Button variant="ghost" size="icon" class="group rounded-full"
-			><Heart class="text-primary group-hover:fill-primary" /></Button
-		>
+		<AddToFavorite productId={product.id}>
+			<Button type="submit" variant="ghost" size="icon" class="group rounded-full"
+				><Heart class="text-primary group-hover:fill-primary" /></Button
+			>
+		</AddToFavorite>
 	</div>
 	<a href="/product/{product.id}">
 		<Card.Content class="p-3 pb-0">

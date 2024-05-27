@@ -3,18 +3,18 @@ import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { basicQueryParams } from '../validation';
 import {
-	checkIfProductExistsInCart,
-	deleteProductFromUserCart,
-	insertProductToUserCart,
-	queryUserProductsInCart
+	checkIfProductExistsInFavorite,
+	deleteProductFromFavorite,
+	insertProductToFavorite,
+	queryUserFavoriteProducts
 } from '@/db/queries';
 
-const postCartProduct = z.object({
+const postFavoriteProduct = z.object({
 	userId: z.string().min(1).trim(),
 	productId: z.string().min(1).trim()
 });
 
-export const cartRoute = new Hono()
+export const favoriteRoute = new Hono()
 	.get(
 		'/:userId',
 		zValidator('query', basicQueryParams, (result, c) => {
@@ -31,7 +31,7 @@ export const cartRoute = new Hono()
 			try {
 				const { userId } = c.req.param();
 				const { limit, offset } = c.req.valid('query');
-				const data = await queryUserProductsInCart.all({ userId, limit, offset });
+				const data = await queryUserFavoriteProducts.all({ userId, limit, offset });
 				return c.json({
 					success: true,
 					data
@@ -50,7 +50,7 @@ export const cartRoute = new Hono()
 	)
 	.post(
 		'/',
-		zValidator('form', postCartProduct, (result, c) => {
+		zValidator('form', postFavoriteProduct, (result, c) => {
 			if (!result.success) {
 				return c.json(
 					{
@@ -64,21 +64,21 @@ export const cartRoute = new Hono()
 			try {
 				const { userId, productId } = c.req.valid('form');
 
-				const exists = await checkIfProductExistsInCart.get({ userId, productId });
+				const exists = await checkIfProductExistsInFavorite.get({ userId, productId });
 				if (exists?.id) {
-					return c.json({ success: false, message: 'Produkt już jest w koszyku.' }, 409);
+					return c.json({ success: false, message: 'Produkt już jest w ulubionych.' }, 409);
 				}
 
-				const res = await insertProductToUserCart.get({ userId, productId });
+				const res = await insertProductToFavorite.get({ userId, productId });
 				if (!res) {
 					throw Error(
-						`Something went wrong when inserting product (id: ${productId}) to user's car (id: ${userId})`
+						`Something went wrong when inserting product (id: ${productId}) to user's favorite (id: ${userId})`
 					);
 				}
 
 				return c.json({
 					success: true,
-					message: 'Dodano produkt do koszyka.'
+					message: 'Dodano produkt do ulubionych.'
 				});
 			} catch (error) {
 				console.log(c.req.path, error);
@@ -92,14 +92,16 @@ export const cartRoute = new Hono()
 			}
 		}
 	)
-	.delete('/:cartId', async (c) => {
+	.delete('/:favoriteId', async (c) => {
 		try {
-			const { cartId } = c.req.param();
+			const { favoriteId } = c.req.param();
 
-			const res = await deleteProductFromUserCart.get({ id: cartId });
+			const res = await deleteProductFromFavorite.get({ id: favoriteId });
 
 			if (!res) {
-				throw Error(`Something went wrong when deleting product from cart (cartId: ${cartId})`);
+				throw Error(
+					`Something went wrong when deleting product from favorite (favoriteId: ${favoriteId})`
+				);
 			}
 
 			return c.json({

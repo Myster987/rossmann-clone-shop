@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Skeleton } from '@/components/ui/skeleton';
-	import ProductCard from './CartProductCard.svelte';
+	import FavoriteCard from './FavoriteCard.svelte';
 	import type { InferQueryModel } from '@/db/types';
 
-	type Products = InferQueryModel<'cart', { with: { product: { with: { images: true } } } }>;
+	type Products = InferQueryModel<'favorite', { with: { product: { with: { images: true } } } }>;
 
 	export let placholderCount = 20;
 	export let isLoading: boolean;
@@ -21,6 +21,6 @@
 	</div>
 {:else}
 	{#each cartProducts as cartProduct}
-		<ProductCard product={cartProduct.product} cartId={cartProduct.id} />
+		<FavoriteCard product={cartProduct.product} favoriteId={cartProduct.id} />
 	{/each}
 {/if}

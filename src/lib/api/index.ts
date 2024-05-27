@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { productsRoute, cartRoute } from './routes';
+import { productsRoute, cartRoute, favoriteRoute } from './routes';
 import { logger } from 'hono/logger';
 
 export const api = new Hono()
@@ -7,6 +7,7 @@ export const api = new Hono()
 	.use(logger())
 	.get('/', (c) => c.text('Hello World!'))
 	.route('/products', productsRoute)
-	.route('/cart', cartRoute);
+	.route('/cart', cartRoute)
+	.route('/favorite', favoriteRoute);
 
 export type Api = typeof api;

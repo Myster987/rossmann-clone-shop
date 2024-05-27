@@ -7,13 +7,12 @@
 </script>
 
 <form
-	action="/form_actions?/addProductToCart"
+	action="/form_actions?/addProductToFavorite"
 	method="post"
 	use:enhance={({ cancel }) => {
 		if (!$userStore?.id) {
 			cancel();
 		}
-
 		return async ({ result }) => {
 			if (result.type == 'success') {
 				// @ts-ignore

@@ -127,6 +127,47 @@ export const deleteProductFromUserCart = db
 	.returning()
 	.prepare();
 
+export const queryUserFavoriteProducts = db.query.favorite
+	.findMany({
+		where: eq(schema.favorite.userId, sql.placeholder('userId')),
+		with: {
+			product: {
+				with: {
+					images: true
+				}
+			}
+		},
+		limit: sql.placeholder('limit'),
+		offset: sql.placeholder('offset')
+	})
+	.prepare();
+
+export const checkIfProductExistsInFavorite = db
+	.select({ id: schema.favorite.id })
+	.from(schema.favorite)
+	.where(
+		and(
+			eq(schema.favorite.userId, sql.placeholder('userId')),
+			eq(schema.favorite.productId, sql.placeholder('productId'))
+		)
+	)
+	.prepare();
+
+export const insertProductToFavorite = db
+	.insert(schema.favorite)
+	.values({
+		userId: sql.placeholder('userId'),
+		productId: sql.placeholder('productId')
+	})
+	.returning()
+	.prepare();
+
+export const deleteProductFromFavorite = db
+	.delete(schema.favorite)
+	.where(eq(schema.favorite.id, sql.placeholder('id')))
+	.returning()
+	.prepare();
+
 export const insertProduct = db
 	.insert(schema.products)
 	.values({

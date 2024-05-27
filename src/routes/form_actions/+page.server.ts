@@ -18,5 +18,22 @@ export const actions: Actions = {
 			return fail(res.status, data);
 		}
 		return data;
+	},
+	addProductToFavorite: async ({ locals: { honoClient }, request }) => {
+		const formData = Object.fromEntries(await request.formData()) as unknown as {
+			userId: string;
+			productId: string;
+		};
+
+		const res = await honoClient.api.favorite.$post({
+			form: formData
+		});
+
+		const data = await res.json();
+
+		if (!data.success) {
+			return fail(res.status, data);
+		}
+		return data;
 	}
 };
