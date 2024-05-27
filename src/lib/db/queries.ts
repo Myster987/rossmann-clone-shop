@@ -86,6 +86,23 @@ export const queryRelatedProductsWithImages = db.query.products
 	})
 	.prepare();
 
+export const queryProductsByCategoryWithImages = db.query.products
+	.findMany({
+		where: eq(schema.products.category, sql.placeholder('category')),
+		with: {
+			images: true
+		},
+		limit: sql.placeholder('limit'),
+		offset: sql.placeholder('offset')
+	})
+	.prepare();
+
+export const queryCategories = db
+	.selectDistinct({ category: schema.products.category })
+	.from(schema.products)
+	.orderBy(schema.products.category)
+	.prepare();
+
 export const queryUserProductsInCart = db.query.cart
 	.findMany({
 		where: eq(schema.cart.userId, sql.placeholder('userId')),

@@ -24,7 +24,16 @@
 					</div>
 				</Sheet.Trigger>
 				<Sheet.Content side="left">
-					<SearchBar class="mt-4 w-full" />
+					<div class="grid gap-2">
+						<SearchBar class="mt-5 w-full" />
+						<a href="/categories">
+							<Button
+								variant="link"
+								class="w-full text-2xl font-semibold text-secondary-foreground hover:text-primary"
+								>Kategorie</Button
+							>
+						</a>
+					</div>
 				</Sheet.Content>
 			</Sheet.Root>
 		</div>

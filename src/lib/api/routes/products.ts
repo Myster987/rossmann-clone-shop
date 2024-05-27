@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import {
 	queryAllCompanyProducts,
+	queryCategories,
 	queryFeaturedProductsWithImages,
 	queryProductById,
 	queryProductsByName
@@ -17,6 +18,24 @@ export const productsRoute = new Hono()
 			const data = await queryAllCompanyProducts.all({ companyId });
 			return c.json({
 				sucess: true,
+				data
+			});
+		} catch (error) {
+			console.log(c.req.path, error);
+			return c.json(
+				{
+					success: false,
+					data: null
+				},
+				500
+			);
+		}
+	})
+	.get('/categories', async (c) => {
+		try {
+			const data = await queryCategories.all();
+			return c.json({
+				success: true,
 				data
 			});
 		} catch (error) {

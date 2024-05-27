@@ -2,6 +2,7 @@
 	import { GithubLink, ProfileDropdownMenu, ThemeButton } from '@/components/custom/buttons';
 	import RossmannIcon from '@/assets/rossmann_icon.svg?raw';
 	import { SearchBar } from '@/components/custom/searchbar';
+	import { Button } from '@/components/ui/button';
 </script>
 
 <header
@@ -13,6 +14,13 @@
 				{@html RossmannIcon}
 			</a>
 			<SearchBar />
+			<a href="/categories">
+				<Button
+					variant="link"
+					class="text-lg font-semibold text-secondary-foreground hover:text-primary"
+					>Kategorie</Button
+				>
+			</a>
 		</div>
 		<div class="flex gap-1">
 			<ProfileDropdownMenu />
