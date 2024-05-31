@@ -4,6 +4,7 @@ import { zValidator } from '@hono/zod-validator';
 import { basicQueryParams } from '../validation';
 import {
 	checkIfProductExistsInCart,
+	deleteAllUsersProductsFromCart,
 	deleteProductFromUserCart,
 	insertProductToUserCart,
 	queryUserProductsInCart
@@ -92,6 +93,29 @@ export const cartRoute = new Hono()
 			}
 		}
 	)
+	.delete('/all/:userId', async (c) => {
+		try {
+			const { userId } = c.req.param();
+
+			const res = await deleteAllUsersProductsFromCart.all({ userId });
+
+			if (!res) {
+				throw Error(
+					`Something went wrong when deleteing products form user's cart (userId: ${userId})`
+				);
+			}
+
+			return c.json({ success: true });
+		} catch (error) {
+			console.log(c.req.path, error);
+			return c.json(
+				{
+					success: false
+				},
+				500
+			);
+		}
+	})
 	.delete('/:cartId', async (c) => {
 		try {
 			const { cartId } = c.req.param();

@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { Separator } from '@/components/ui/separator';
-	import type { LayoutData } from './$types';
-	import { Button } from '@/components/ui/button';
-	import { Check } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import { Check } from 'lucide-svelte';
+	import { Separator } from '@/components/ui/separator';
+	import { Button } from '@/components/ui/button';
 	import { ScrollArea } from '@/components/ui/scroll-area';
+	import type { LayoutData } from './$types';
+	import { MobileFilters } from '@/components/custom/other';
 
 	export let data: LayoutData;
 
@@ -17,18 +18,16 @@
 
 	<Separator />
 
-	<div class="flex h-full">
-		<div class="flex flex-row-reverse gap-2">
-			<Separator orientation="vertical" />
-
-			<ScrollArea class="w-[200px]">
+	<div class="flex h-full flex-col md:flex-row">
+		<div class="flex flex-row gap-2 p-2 md:p-0">
+			<ScrollArea class="hidden w-[180px] md:block">
 				<ul>
 					{#each categories as category}
 						<li>
 							<a href="/categories/{category}">
 								<Button
 									variant="link"
-									class="flex gap-1 text-secondary-foreground hover:text-primary"
+									class="flex gap-1 text-lg text-secondary-foreground hover:text-primary"
 								>
 									<Check class="h-4 w-4 {currentCategory != category && 'text-transparent'}" />
 									{category}
@@ -38,6 +37,10 @@
 					{/each}
 				</ul>
 			</ScrollArea>
+
+			<MobileFilters {categories} {currentCategory} />
+
+			<Separator orientation="vertical" class="hidden md:block" />
 		</div>
 
 		<div class="relative flex-grow">

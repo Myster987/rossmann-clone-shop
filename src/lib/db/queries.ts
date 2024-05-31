@@ -144,6 +144,12 @@ export const deleteProductFromUserCart = db
 	.returning()
 	.prepare();
 
+export const deleteAllUsersProductsFromCart = db
+	.delete(schema.cart)
+	.where(eq(schema.cart.userId, sql.placeholder('userId')))
+	.returning()
+	.prepare();
+
 export const queryUserFavoriteProducts = db.query.favorite
 	.findMany({
 		where: eq(schema.favorite.userId, sql.placeholder('userId')),
@@ -199,6 +205,44 @@ export const insertProduct = db
 		archived: sql.placeholder('archived')
 	})
 	.prepare();
+
+export const insertOrder = db
+	.insert(schema.orders)
+	.values({
+		id: sql.placeholder('id'),
+		userId: sql.placeholder('userId')
+	})
+	.returning()
+	.prepare();
+
+export const queryOrderProductsByOrderId = db
+	.select()
+	.from(schema.orderProduct)
+	.where(eq(schema.orderProduct.orderId, sql.placeholder('orderId')))
+	.prepare();
+
+export const insertOrderProduct = db
+	.insert(schema.orderProduct)
+	.values({
+		id: sql.placeholder('id'),
+		productId: sql.placeholder('productId'),
+		companyId: sql.placeholder('companyId'),
+		orderId: sql.placeholder('orderId')
+	})
+	.returning()
+	.prepare();
+
+export const deleteOrder = db
+	.delete(schema.orders)
+	.where(eq(schema.orders.id, sql.placeholder('orderId')))
+	.returning()
+	.prepare();
+
+export const insertMultipleOrderProducts = async (
+	data: { id: string; productId: string; orderId: string; companyId: string }[]
+) => {
+	return Promise.all(data.map((val) => insertOrderProduct.get(val)));
+};
 
 export const deleteProduct = db
 	.delete(schema.products)

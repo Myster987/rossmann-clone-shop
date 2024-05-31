@@ -13,10 +13,10 @@
 
 {#if isLoading}
 	{#each Array(placholderCount) as skeleton}
-		<Skeleton class="h-96 rounded-xl" />
+		<Skeleton class="h-64 rounded-xl" />
 	{/each}
 {:else if isError || !cartProducts}
-	<div class="flexh-80 col-span-full items-center justify-center text-2xl font-medium">
+	<div class="col-span-full flex h-80 items-center justify-center text-2xl font-medium">
 		Coś poszło nie tak.
 	</div>
 {:else}

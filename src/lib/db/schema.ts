@@ -93,9 +93,7 @@ export const cart = sqliteTable('cart', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	productId: text('product_id')
-		.notNull()
-		.references(() => products.id, { onDelete: 'cascade' })
+	productId: text('product_id').references(() => products.id, { onDelete: 'cascade' })
 });
 export const cartRelation = relations(cart, ({ one }) => ({
 	user: one(users, {
@@ -117,9 +115,7 @@ export const favorite = sqliteTable('favorite', {
 	userId: text('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	productId: text('product_id')
-		.notNull()
-		.references(() => products.id, { onDelete: 'cascade' })
+	productId: text('product_id').references(() => products.id, { onDelete: 'cascade' })
 });
 export const favoriteRelation = relations(favorite, ({ one }) => ({
 	user: one(users, {
@@ -137,9 +133,13 @@ export type InsertFavorite = InferInsertModel<typeof favorite>;
 export const orders = sqliteTable('orders', {
 	id: text('id').primaryKey(),
 	createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-	companyId: text('company_id').references(() => companies.id, { onDelete: 'cascade' }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => users.id),
 	fulfilledAt: text('fulfilled_at'),
-	status: text('status').default('pending')
+	status: text('status').default('pending'),
+	address: text('address'),
+	phone: text('phone')
 });
 export type SelectOrders = InferSelectModel<typeof orders>;
 export type InsertOrders = InferInsertModel<typeof orders>;
@@ -147,10 +147,12 @@ export type InsertOrders = InferInsertModel<typeof orders>;
 export const orderProduct = sqliteTable('order_product', {
 	id: text('id').primaryKey(),
 	createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
-	orderId: text('order_id').references(() => orders.id, { onDelete: 'cascade' }),
-	userId: text('user_id')
+	companyId: text('company_id')
 		.notNull()
-		.references(() => users.id, { onDelete: 'cascade' }),
+		.references(() => companies.id),
+	orderId: text('order_id')
+		.notNull()
+		.references(() => orders.id, { onDelete: 'cascade' }),
 	productId: text('product_id')
 		.notNull()
 		.references(() => products.id, { onDelete: 'cascade' })

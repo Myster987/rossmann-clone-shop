@@ -22,11 +22,12 @@ export const withImagesProductsRoute = new Hono()
 				const { categoryName } = c.req.param();
 				const { limit, offset } = c.req.valid('query');
 
-				const data = (await queryProductsByCategoryWithImages).all({
+				const data = await queryProductsByCategoryWithImages.all({
 					category: categoryName,
 					limit,
 					offset
 				});
+
 				return c.json({
 					success: true,
 					data
