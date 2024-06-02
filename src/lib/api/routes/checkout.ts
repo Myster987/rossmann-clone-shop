@@ -1,14 +1,14 @@
 import { PUBLIC_SHOP_URL } from '$env/static/public';
-import { Hono } from 'hono';
-import { generateId } from 'lucia';
 import { z } from 'zod';
+import { generateId } from 'lucia';
+import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
+import { inArray } from 'drizzle-orm';
 import { insertMultipleOrderProducts, insertOrder } from '@/db/queries';
 import { stripe } from '@/stripe';
-import type { Stripe } from 'stripe';
 import { db } from '@/db';
-import { inArray } from 'drizzle-orm';
 import * as schema from '@/db/schema';
+import type { Stripe } from 'stripe';
 
 const postCheckoutSchema = z.object({
 	userId: z.string(),

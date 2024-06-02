@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { GithubLink, ProfileDropdownMenu, ThemeButton } from '@/components/custom/buttons';
-	import RossmannIcon from '@/assets/rossmann_icon.svg?raw';
 	import { SearchBar } from '@/components/custom/searchbar';
 	import { Button } from '@/components/ui/button';
+	import RossmannIcon from '@/assets/rossmann_icon.svg?raw';
 </script>
 
 <header

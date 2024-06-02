@@ -21,6 +21,8 @@
 	</div>
 {:else}
 	{#each cartProducts as cartProduct}
-		<FavoriteCard product={cartProduct.product} favoriteId={cartProduct.id} />
+		{#if cartProduct.product}
+			<FavoriteCard product={cartProduct.product} favoriteId={cartProduct.id} />
+		{/if}
 	{/each}
 {/if}

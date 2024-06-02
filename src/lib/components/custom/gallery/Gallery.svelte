@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as Carousel from '$lib/components/ui/carousel';
 	import type { SelectImages } from '@/db/schema';
+	import * as Carousel from '$lib/components/ui/carousel';
 
 	export let images: SelectImages[];
 </script>

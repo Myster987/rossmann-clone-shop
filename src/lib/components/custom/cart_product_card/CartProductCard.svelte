@@ -34,7 +34,7 @@
 				{product.category}
 			</Card.Description>
 			<Currency amount={product.price} class="text-lg font-semibold sm:text-xl" />
-			<div class="flex w-fit items-center justify-between gap-2 rounded-full bg-primary">
+			<div class="flex w-fit items-center justify-between gap-2 rounded-full bg-primary text-white">
 				<Button
 					on:click={() => {
 						const productData = $quantitiesStore.get(product.id);

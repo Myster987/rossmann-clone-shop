@@ -1,5 +1,5 @@
-import { deleteOrder } from '@/db/queries';
 import { Hono } from 'hono';
+import { deleteOrder } from '@/db/queries';
 
 export const ordersRoute = new Hono().delete('/:orderId', async (c) => {
 	try {

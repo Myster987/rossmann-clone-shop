@@ -4,10 +4,10 @@
 	import { toast } from 'svelte-sonner';
 	import { ShoppingCart, Trash2 } from 'lucide-svelte';
 	import { Currency } from '../other';
+	import { AddToCart } from '../buttons';
 	import { Button } from '@/components/ui/button';
 	import * as Card from '@/components/ui/card';
 	import type { SelectImages, SelectProduct } from '@/db/schema';
-	import { AddToCart } from '../buttons';
 
 	export let favoriteId: number;
 	export let product: SelectProduct & { images: SelectImages[] };

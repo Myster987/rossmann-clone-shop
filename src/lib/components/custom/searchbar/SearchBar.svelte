@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { cn } from '@/utils';
 	import { productsStore } from '@/stores';
 	import { createHonoClient } from '@/api/client';
 	import { Heart, LoaderCircle, Search } from 'lucide-svelte';
 	import { Button } from '@/components/ui/button';
 	import * as Command from '@/components/ui/command';
-	import { cn } from '@/utils';
 
 	const honoClient = createHonoClient();
 
