@@ -202,7 +202,8 @@ export const insertProduct = db
 		description: sql.placeholder('description'),
 		ingredients: sql.placeholder('ingredients'),
 		featured: sql.placeholder('featured'),
-		archived: sql.placeholder('archived')
+		archived: sql.placeholder('archived'),
+		quantity: sql.placeholder('quantity')
 	})
 	.prepare();
 
@@ -215,10 +216,13 @@ export const insertOrder = db
 	.returning()
 	.prepare();
 
-export const queryOrderProductsByOrderId = db
-	.select()
-	.from(schema.orderProduct)
-	.where(eq(schema.orderProduct.orderId, sql.placeholder('orderId')))
+export const queryOrderProductsByOrderId = db.query.orderProduct
+	.findMany({
+		where: eq(schema.orderProduct.orderId, sql.placeholder('orderId')),
+		with: {
+			product: true
+		}
+	})
 	.prepare();
 
 export const insertOrderProduct = db
@@ -227,7 +231,8 @@ export const insertOrderProduct = db
 		id: sql.placeholder('id'),
 		productId: sql.placeholder('productId'),
 		companyId: sql.placeholder('companyId'),
-		orderId: sql.placeholder('orderId')
+		orderId: sql.placeholder('orderId'),
+		quantity: sql.placeholder('quantity')
 	})
 	.returning()
 	.prepare();
@@ -239,7 +244,7 @@ export const deleteOrder = db
 	.prepare();
 
 export const insertMultipleOrderProducts = async (
-	data: { id: string; productId: string; orderId: string; companyId: string }[]
+	data: { id: string; productId: string; orderId: string; companyId: string; quantity: number }[]
 ) => {
 	return Promise.all(data.map((val) => insertOrderProduct.get(val)));
 };

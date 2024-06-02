@@ -2,6 +2,7 @@
 	import { Skeleton } from '@/components/ui/skeleton';
 	import ProductCard from './CartProductCard.svelte';
 	import type { InferQueryModel } from '@/db/types';
+	import type { Writable } from 'svelte/store';
 
 	type Products = InferQueryModel<'cart', { with: { product: { with: { images: true } } } }>;
 
@@ -20,7 +21,9 @@
 		Coś poszło nie tak.
 	</div>
 {:else}
-	{#each cartProducts as cartProduct}
-		<ProductCard product={cartProduct.product} cartId={cartProduct.id} />
+	{#each cartProducts as cartProduct, index}
+		{#if cartProduct.product}
+			<ProductCard product={cartProduct.product} cartId={cartProduct.id} />
+		{/if}
 	{/each}
 {/if}

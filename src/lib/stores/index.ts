@@ -10,3 +10,5 @@ interface ProductsStoreData extends SelectProduct {
 export const userStore = writable<User | null>(null);
 
 export const productsStore = createAsyncStore<ProductsStoreData[]>();
+
+export const quantitiesStore = writable(new Map<string, { count: number; price: number }>());

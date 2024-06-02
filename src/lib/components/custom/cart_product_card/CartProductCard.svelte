@@ -2,37 +2,67 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
-	import { Trash2 } from 'lucide-svelte';
+	import { Minus, Plus, Trash2 } from 'lucide-svelte';
 	import { Currency } from '../other';
 	import { Button } from '@/components/ui/button';
 	import * as Card from '@/components/ui/card';
 	import type { SelectImages, SelectProduct } from '@/db/schema';
+	import { quantitiesStore } from '@/stores';
 
 	export let cartId: number;
 	export let product: SelectProduct & { images: SelectImages[] };
 </script>
 
 <Card.Root class="flex h-fit">
-	<a href="/product/{product.id}" class="flex">
-		<Card.Content class="w-fit p-3">
-			<div
-				class="flex aspect-square max-h-[150px] justify-center overflow-hidden rounded-md bg-gray-300 p-2 sm:max-h-[250px]"
-			>
-				<img
-					src={product.images[0].imageUrl}
-					alt="Image of {product.name}"
-					class="pointer-events-none aspect-square object-contain"
-				/>
-			</div>
-		</Card.Content>
+	<div class="flex">
+		<a href="/product/{product.id}">
+			<Card.Content class="w-fit p-3">
+				<div
+					class="flex aspect-square max-h-[150px] justify-center overflow-hidden rounded-md bg-gray-300 p-2 sm:max-h-[250px]"
+				>
+					<img
+						src={product.images[0].imageUrl}
+						alt="Image of {product.name}"
+						class="pointer-events-none aspect-square object-contain"
+					/>
+				</div>
+			</Card.Content>
+		</a>
 		<Card.Footer class="grid h-fit gap-1 p-3">
-			<Card.Title class="break-all text-2xl sm:text-3xl">{product.name}</Card.Title>
+			<Card.Title class="break-all text-2xl sm:text-2xl">{product.name}</Card.Title>
 			<Card.Description class="break-all sm:text-lg">
 				{product.category}
 			</Card.Description>
-			<Currency amount={product.price} class="text-xl font-semibold sm:text-2xl" />
+			<Currency amount={product.price} class="text-lg font-semibold sm:text-xl" />
+			<div class="flex w-fit items-center justify-between gap-2 rounded-full bg-primary">
+				<Button
+					on:click={() => {
+						const productData = $quantitiesStore.get(product.id);
+						const newCount = (productData?.count || 1) + 1;
+						$quantitiesStore.set(product.id, { count: newCount, price: productData?.price || 0 });
+						$quantitiesStore = $quantitiesStore;
+					}}
+					size="icon"
+					variant="ghost"
+					class="hover:bg-transparent"><Plus /></Button
+				>
+				{$quantitiesStore.get(product.id)?.count}
+				<Button
+					on:click={() => {
+						const productData = $quantitiesStore.get(product.id);
+						if ((productData?.count || 0) > 1) {
+							const newCount = (productData?.count || 1) - 1;
+							$quantitiesStore.set(product.id, { count: newCount, price: productData?.price || 0 });
+							$quantitiesStore = $quantitiesStore;
+						}
+					}}
+					size="icon"
+					variant="ghost"
+					class="hover:bg-transparent"><Minus /></Button
+				>
+			</div>
 		</Card.Footer>
-	</a>
+	</div>
 
 	<div class="ml-auto p-2">
 		<form

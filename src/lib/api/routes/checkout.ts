@@ -12,7 +12,12 @@ import * as schema from '@/db/schema';
 
 const postCheckoutSchema = z.object({
 	userId: z.string(),
-	productIds: z.string().array()
+	productsToBuy: z
+		.object({
+			id: z.string(),
+			quantity: z.coerce.number().int().positive()
+		})
+		.array()
 });
 
 export const checkoutRoute = new Hono().post(
@@ -30,32 +35,49 @@ export const checkoutRoute = new Hono().post(
 	}),
 	async (c) => {
 		try {
-			const { productIds, userId } = c.req.valid('json');
+			const { productsToBuy, userId } = c.req.valid('json');
 
 			const products = await db.query.products.findMany({
-				where: inArray(schema.products.id, productIds)
+				where: inArray(
+					schema.products.id,
+					productsToBuy.map((val) => val.id)
+				)
 			});
-			console.log(products);
+
+			if (
+				!products.every(
+					(product) =>
+						product.quantity - (productsToBuy.find((val) => val.id == product.id)?.quantity || 1) >
+						0
+				)
+			) {
+				return c.json(
+					{
+						success: false,
+						url: null
+					},
+					400
+				);
+			}
 
 			const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
 			products.forEach((product) => {
 				line_items.push({
-					quantity: 1,
+					quantity: productsToBuy.find((val) => val.id == product.id)?.quantity || 1,
 					price_data: {
 						currency: 'PLN',
 						product_data: {
 							name: product.name
 						},
-						unit_amount: product.price * 100
+						unit_amount: Math.round(product.price * 100)
 					}
 				});
 			});
 
-			console.log(line_items);
-
 			const orderId = generateId(20);
 			const orderInsertion = await insertOrder.get({ id: orderId, userId });
+
 			if (!orderInsertion) {
 				throw Error(`Something went wrong when inserting order`);
 			}
@@ -65,7 +87,8 @@ export const checkoutRoute = new Hono().post(
 					id: generateId(20),
 					orderId,
 					productId: val.id,
-					companyId: val.companyId
+					companyId: val.companyId,
+					quantity: productsToBuy.find((prod) => prod.id == val.id)?.quantity || 1
 				}))
 			);
 			if (!res) {

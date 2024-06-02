@@ -1,5 +1,12 @@
 import { Hono } from 'hono';
-import { productsRoute, cartRoute, favoriteRoute, checkoutRoute, ordersRoute } from './routes';
+import {
+	productsRoute,
+	cartRoute,
+	favoriteRoute,
+	checkoutRoute,
+	ordersRoute,
+	webhookRoute
+} from './routes';
 import { logger } from 'hono/logger';
 
 export const api = new Hono()
@@ -10,6 +17,7 @@ export const api = new Hono()
 	.route('/cart', cartRoute)
 	.route('/favorite', favoriteRoute)
 	.route('/checkout', checkoutRoute)
-	.route('/orders', ordersRoute);
+	.route('/orders', ordersRoute)
+	.route('/webhook', webhookRoute);
 
 export type Api = typeof api;

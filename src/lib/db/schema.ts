@@ -51,6 +51,7 @@ export const products = sqliteTable('products', {
 		}),
 	name: text('name').notNull(),
 	price: real('price').notNull(),
+	quantity: integer('quantity').notNull(),
 	category: text('category').notNull(),
 	description: text('description').notNull(),
 	ingredients: text('ingredients').notNull(),
@@ -141,6 +142,9 @@ export const orders = sqliteTable('orders', {
 	address: text('address'),
 	phone: text('phone')
 });
+export const orderRelation = relations(orders, ({ many }) => ({
+	orderProducts: many(orderProduct)
+}));
 export type SelectOrders = InferSelectModel<typeof orders>;
 export type InsertOrders = InferInsertModel<typeof orders>;
 
@@ -155,7 +159,18 @@ export const orderProduct = sqliteTable('order_product', {
 		.references(() => orders.id, { onDelete: 'cascade' }),
 	productId: text('product_id')
 		.notNull()
-		.references(() => products.id, { onDelete: 'cascade' })
+		.references(() => products.id, { onDelete: 'cascade' }),
+	quantity: integer('quantity').notNull()
 });
+export const orderProductRelation = relations(orderProduct, ({ one }) => ({
+	order: one(orders, {
+		fields: [orderProduct.orderId],
+		references: [orders.id]
+	}),
+	product: one(products, {
+		fields: [orderProduct.productId],
+		references: [products.id]
+	})
+}));
 export type SelectOrdersProduct = InferSelectModel<typeof orderProduct>;
 export type InsertOrdersProduct = InferInsertModel<typeof orderProduct>;

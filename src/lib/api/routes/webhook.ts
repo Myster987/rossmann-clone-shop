@@ -1,11 +1,12 @@
+import { SECRET_STRIPE_WEBHOOK } from '$env/static/private';
 import Stripe from 'stripe';
 import { stripe } from '@/stripe';
 import { Hono } from 'hono';
-import { SECRET_STRIPE_WEBHOOK } from '$env/static/private';
-import { db } from '@/db';
-import { orders } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { db } from '@/db';
+import { orders, products } from '@/db/schema';
 import { queryOrderProductsByOrderId } from '@/db/queries';
+import { formatedTimestamp } from '@/utils';
 
 export const webhookRoute = new Hono().post('/', async (c) => {
 	try {
@@ -37,18 +38,40 @@ export const webhookRoute = new Hono().post('/', async (c) => {
 
 		if (event.type == 'checkout.session.completed') {
 			const orderId = session?.metadata?.orderId as string;
-			const order = await db
+			await db
 				.update(orders)
 				.set({
 					status: 'paid',
 					address: addressString,
-					phone: session.customer_details?.phone || ''
+					phone: session.customer_details?.phone || '',
+					fulfilledAt: formatedTimestamp()
 				})
-				.where(eq(orders.id, orderId))
-				.returning();
+				.where(eq(orders.id, orderId));
 
-			const productIds = await queryOrderProductsByOrderId.all({ orderId });
+			const productsToUpdate = await queryOrderProductsByOrderId.all({ orderId });
+
+			await Promise.all(
+				productsToUpdate.map((val) => {
+					const newProduct: { quantity: number; archived?: number; featured?: number } = {
+						quantity: val.product.quantity - val.quantity
+					};
+					console.log(newProduct);
+
+					if (newProduct.quantity == 0) {
+						newProduct.featured = 0;
+						newProduct.archived = 1;
+					}
+					return db
+						.update(products)
+						.set({ ...newProduct })
+						.where(eq(products.id, val.productId));
+				})
+			);
 		}
+
+		return c.json({
+			success: true
+		});
 	} catch (error) {
 		console.log(c.req.path, error);
 		return c.json(

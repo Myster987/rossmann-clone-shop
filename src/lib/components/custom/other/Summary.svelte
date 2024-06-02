@@ -1,13 +1,12 @@
 <script lang="ts">
+	import { quantitiesStore } from '@/stores';
 	import { Currency } from '.';
 	import { PayButton } from '../buttons';
 	import { Separator } from '@/components/ui/separator';
 	import * as Card from '@/components/ui/card';
 
-	export let productIds: string[];
-	export let prices: number[];
 	export let isLoading: boolean;
-	$: priceSum = prices.reduce((a, b) => a + b, 0);
+	$: priceSum = Array.from($quantitiesStore.values()).reduce((a, b) => a + b.count * b.price, 0);
 </script>
 
 <Card.Root class="h-fit grow">
@@ -22,6 +21,6 @@
 				<Currency amount={priceSum} class="font-semibold" />
 			{/if}
 		</div>
-		<PayButton {productIds} />
+		<PayButton />
 	</Card.Content>
 </Card.Root>
