@@ -5,7 +5,7 @@
 	export let images: SelectImages[];
 </script>
 
-<Carousel.Root class="w-full px-8">
+<Carousel.Root class="w-full">
 	<Carousel.Content class="aspect-square max-h-[500px]">
 		{#each images as image}
 			<Carousel.Item>
