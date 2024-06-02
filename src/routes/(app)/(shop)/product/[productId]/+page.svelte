@@ -1,18 +1,28 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { Heart, ShoppingCart } from 'lucide-svelte';
 	import { createAsyncStore } from '@/stores/async_stores';
+	import { userStore } from '@/stores';
+	import { handleClientLoginRedirect } from '@/utils';
 	import { ProductsList } from '@/components/custom/product_card';
 	import { Gallery } from '@/components/custom/gallery';
 	import { Currency } from '@/components/custom/other';
 	import { Separator } from '@/components/ui/separator';
 	import { Button } from '@/components/ui/button';
-	import type { PageData } from './$types';
-	import { Heart, ShoppingCart } from 'lucide-svelte';
 	import { AddToCart } from '@/components/custom/buttons';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 	$: ({ product } = data);
 	const relatedProductsStore = createAsyncStore(data.streamed.relatedProducts);
 	$: relatedProductsStore.updateAsync(data.streamed.relatedProducts);
+
+	const handleRedirectIfNotLogged = () => {
+		if (!$userStore) {
+			goto(handleClientLoginRedirect($page.url));
+		}
+	};
 </script>
 
 <main class="px-4 py-12 sm:py-10">
@@ -29,11 +39,14 @@
 				</div>
 				<div class="mt-2 flex flex-wrap gap-2">
 					<AddToCart productId={product.id}>
-						<Button type="submit" class="flex gap-1 rounded-full text-lg"
+						<Button
+							type="submit"
+							class="flex gap-1 rounded-full text-lg"
+							on:click={handleRedirectIfNotLogged}
 							>Dodaj do koszyka <ShoppingCart size="22" /></Button
 						>
 					</AddToCart>
-					<Button class="group flex gap-1 rounded-full text-lg"
+					<Button class="group flex gap-1 rounded-full text-lg" on:click={handleRedirectIfNotLogged}
 						>Dodaj do ulubionych <Heart
 							size="22"
 							class="group-hover:fill-primary-foreground"
