@@ -39,7 +39,7 @@
 		<a href="/product/{product.id}">
 			<Card.Content class="w-fit p-3">
 				<div
-					class="relative flex aspect-square max-h-[300px] justify-center overflow-hidden rounded-md bg-gray-300 p-2"
+					class="flex aspect-square max-h-[300px] justify-center overflow-hidden rounded-md bg-gray-300 p-2"
 				>
 					<img
 						src={product.images[0].imageUrl}

@@ -3,6 +3,11 @@ import { twMerge } from 'tailwind-merge';
 import { cubicOut } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
 
+export const handleClientLoginRedirect = (url: URL) => {
+	const redirectTo = url.pathname + url.search;
+	return `/sign_in?redirectTo=${redirectTo}`;
+};
+
 export const formatedTimestamp = () => {
 	const d = new Date();
 	const date = d.toISOString().split('T')[0];

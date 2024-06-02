@@ -13,12 +13,12 @@
 	export let product: SelectProduct & { images: SelectImages[] };
 </script>
 
-<Card.Root class="flex h-fit">
-	<div class="flex">
+<Card.Root class="relative flex">
+	<div class="flex flex-col md:flex-row">
 		<a href="/product/{product.id}">
 			<Card.Content class="w-fit p-3">
 				<div
-					class="flex aspect-square max-h-[150px] justify-center overflow-hidden rounded-md bg-gray-300 p-2 sm:max-h-[250px]"
+					class="flex aspect-square max-h-[300px] justify-center overflow-hidden rounded-md bg-gray-300 p-2"
 				>
 					<img
 						src={product.images[0].imageUrl}
@@ -44,7 +44,7 @@
 					}}
 					size="icon"
 					variant="ghost"
-					class="hover:bg-transparent"><Plus /></Button
+					class="hover:bg-transparent hover:text-gray-400"><Plus /></Button
 				>
 				{$quantitiesStore.get(product.id)?.count}
 				<Button
@@ -58,13 +58,13 @@
 					}}
 					size="icon"
 					variant="ghost"
-					class="hover:bg-transparent"><Minus /></Button
+					class="hover:bg-transparent hover:text-gray-400"><Minus /></Button
 				>
 			</div>
 		</Card.Footer>
 	</div>
 
-	<div class="ml-auto p-2">
+	<div class="absolute right-5 top-5 md:static md:ml-auto md:p-2">
 		<form
 			action="?/deleteProductFromCart"
 			method="post"

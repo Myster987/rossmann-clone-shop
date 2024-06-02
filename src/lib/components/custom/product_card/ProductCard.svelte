@@ -1,25 +1,44 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { Heart, ShoppingCart } from 'lucide-svelte';
 	import { Currency } from '../other';
 	import { AddToCart, AddToFavorite } from '../buttons';
+	import { userStore } from '@/stores';
+	import { handleClientLoginRedirect } from '@/utils';
 	import { Button } from '@/components/ui/button';
 	import * as Card from '@/components/ui/card';
 	import type { SelectImages, SelectProduct } from '@/db/schema';
 
 	export let product: SelectProduct;
 	export let image: SelectImages;
+
+	const handleRedirectIfNotLogged = () => {
+		if (!$userStore) {
+			goto(handleClientLoginRedirect($page.url));
+		}
+	};
 </script>
 
 <Card.Root class="relative h-full">
 	<div class="absolute right-5 top-5 flex">
 		<AddToCart productId={product.id}
-			><Button type="submit" size="icon" variant="ghost" class="rounded-full"
-				><ShoppingCart class="text-primary" /></Button
+			><Button
+				type="submit"
+				size="icon"
+				variant="ghost"
+				class="rounded-full"
+				on:click={handleRedirectIfNotLogged}><ShoppingCart class="text-primary" /></Button
 			></AddToCart
 		>
 
 		<AddToFavorite productId={product.id}>
-			<Button type="submit" variant="ghost" size="icon" class="group rounded-full"
+			<Button
+				type="submit"
+				variant="ghost"
+				size="icon"
+				class="group rounded-full"
+				on:click={handleRedirectIfNotLogged}
 				><Heart class="text-primary group-hover:fill-primary" /></Button
 			>
 		</AddToFavorite>
