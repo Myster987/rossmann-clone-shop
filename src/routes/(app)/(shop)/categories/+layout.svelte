@@ -13,7 +13,7 @@
 	$: currentCategory = $page.params?.categoryName || '';
 </script>
 
-<main class="flex h-full flex-col p-5">
+<main class="flex min-h-screen flex-col p-5">
 	<h1 class="mb-4 text-4xl font-bold">Kategorie</h1>
 
 	<Separator />
@@ -43,7 +43,7 @@
 			<Separator orientation="vertical" class="hidden md:block" />
 		</div>
 
-		<div class="relative flex-grow">
+		<div class="relative h-full flex-grow">
 			<slot />
 		</div>
 	</div>

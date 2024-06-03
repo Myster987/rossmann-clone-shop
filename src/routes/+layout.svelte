@@ -13,6 +13,6 @@
 <ModeWatcher></ModeWatcher>
 <Toaster></Toaster>
 
-<div class="h-screen">
+<div class="min-h-screen">
 	<slot></slot>
 </div>
