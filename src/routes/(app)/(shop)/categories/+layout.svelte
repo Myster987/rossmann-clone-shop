@@ -18,7 +18,7 @@
 
 	<Separator />
 
-	<div class="flex h-full flex-col md:flex-row">
+	<div class="flex min-h-screen flex-col md:flex-row">
 		<div class="flex flex-row gap-2 p-2 md:p-0">
 			<ScrollArea class="hidden w-[180px] md:block">
 				<ul>
@@ -43,7 +43,7 @@
 			<Separator orientation="vertical" class="hidden md:block" />
 		</div>
 
-		<div class="relative h-full flex-grow">
+		<div class="relative flex-grow">
 			<slot />
 		</div>
 	</div>
