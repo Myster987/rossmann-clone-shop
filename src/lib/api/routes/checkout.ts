@@ -47,7 +47,7 @@ export const checkoutRoute = new Hono().post(
 			if (
 				!products.every(
 					(product) =>
-						product.quantity - (productsToBuy.find((val) => val.id == product.id)?.quantity || 1) >
+						product.quantity - (productsToBuy.find((val) => val.id == product.id)?.quantity || 1) >=
 						0
 				)
 			) {
