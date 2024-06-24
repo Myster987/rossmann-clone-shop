@@ -10,4 +10,4 @@ Technology used:
 - Drizzle ORM
 - Turso and LibSQL
 
-## [Website link](https://rossmann-clone-shop.vercel.app/):
+## [Website link](https://rossmann-clone-shop.vercel.app/)
